@@ -6,7 +6,7 @@ import shutil
 from PySide6.QtCore import QEvent, QObject, Qt, QTimer
 from PySide6.QtGui import QBrush, QColor, QFont, QIcon, QKeySequence, QShortcut
 from PySide6.QtWidgets import (QAbstractItemDelegate, QAbstractItemView, QCheckBox, QComboBox, QFileDialog,
-                               QFormLayout, QFrame, QGridLayout, QGroupBox, QHBoxLayout,
+                               QFormLayout, QFrame, QGroupBox, QHBoxLayout,
                                QHeaderView, QLabel, QLineEdit, QListWidget, QListWidgetItem,
                                QMainWindow, QMessageBox, QPushButton, QStackedWidget,
                                QTableWidget, QTableWidgetItem, QTreeWidget, QTreeWidgetItem,
@@ -18,6 +18,7 @@ from .paths import data_dir, resource, safe_filename, sub_dir
 from . import auth
 from .ui_auth import ChangePinDialog, RegisterDialog, confirm_pin, sign_in
 from . import templates as T
+from .ui_dashboard import DashboardPage
 from .ui_exports import MarkSheetDialog, RemarksDialog, ReportPrintDialog
 from .ui_dialogs import (AssessmentDialog, ClassDialog, LearnerDialog, UploadDialog,
                          NameCodeDialog)
@@ -116,85 +117,6 @@ class Page(QWidget):
 
 
 # ---------------------------------------------------------------------------
-class DashboardPage(Page):
-    def __init__(self, main):
-        super().__init__(main)
-        lay = QVBoxLayout(self)
-        lay.addWidget(page_title("Dashboard"))
-        self.cards = QGridLayout()
-        lay.addLayout(self.cards)
-        self.card_labels = []
-        for i, name in enumerate(["Learners", "Assessed", "Class mean", "Mean level"]):
-            f = QFrame()
-            f.setObjectName("card")
-            v = QVBoxLayout(f)
-            a = QLabel("-")
-            a.setObjectName("cardValue")
-            b = QLabel(name)
-            b.setObjectName("hint")
-            v.addWidget(a)
-            v.addWidget(b)
-            self.cards.addWidget(f, 0, i)
-            self.card_labels.append(a)
-        lay.addSpacing(8)
-        self.caption = QLabel()
-        self.caption.setObjectName("section")
-        lay.addWidget(self.caption)
-        self.table = QTableWidget()
-        self.table.verticalHeader().hide()
-        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        lay.addWidget(self.table, 1)
-        self.empty = QLabel()
-        self.empty.setWordWrap(True)
-        self.empty.setObjectName("hint")
-        lay.addWidget(self.empty)
-
-    def refresh(self):
-        self.table.clear()
-        self.table.setRowCount(0)
-        if not self.cid:
-            for c in self.card_labels:
-                c.setText("-")
-            self.caption.setText("")
-            self.empty.setText("Welcome! Start by creating a class (top bar → New class), then "
-                               "add learners, create an assessment and enter marks.")
-            return
-        n = len(self.db.learners(self.cid))
-        self.card_labels[0].setText(str(n))
-        if not self.aid:
-            for c in self.card_labels[1:]:
-                c.setText("-")
-            self.caption.setText("")
-            self.empty.setText("Next: create an assessment (top bar → New assessment).")
-            return
-        res = Results(self.db, self.cid, self.aid)
-        ov = res.overall()
-        self.card_labels[1].setText(str(ov["with_marks"]))
-        self.card_labels[2].setText(f"{ov['mean_pct']:.1f}%" if ov["mean_pct"] is not None else "-")
-        self.card_labels[3].setText(ov["band"].code if ov["band"] else "-")
-        self.caption.setText(f"Learning area analysis — {res.assessment['name']}, "
-                             f"Term {res.assessment['term']} {res.assessment['year']}")
-        self.empty.setText("" if ov["with_marks"] else "No marks entered yet for this assessment.")
-        heads = ["Learning area", "Sat", "Mean %", "Level"] + G.GROUPS + G.CODES
-        self.table.setColumnCount(len(heads))
-        self.table.setHorizontalHeaderLabels(heads)
-        stats = res.subject_stats()
-        self.table.setRowCount(len(stats))
-        for r, st in enumerate(stats):
-            self.table.setItem(r, 0, item(st["subject"]["name"]))
-            self.table.setItem(r, 1, item(st["sat"], center=True))
-            self.table.setItem(r, 2, item(f"{st['mean_pct']:.1f}" if st["mean_pct"] is not None
-                                          else "-", center=True))
-            self.table.setItem(r, 3, grade_item(st["band"].code if st["band"] else ""))
-            for i, g in enumerate(G.GROUPS):
-                self.table.setItem(r, 4 + i, item(st["groups"][g], center=True, bold=True,
-                                                  bg=GROUP_COLORS[g]))
-            for i, c in enumerate(G.CODES):
-                self.table.setItem(r, 8 + i, item(st["counts"][c], center=True))
-        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
-
-
 # ---------------------------------------------------------------------------
 class LearnersPage(Page):
     def __init__(self, main):
@@ -1177,6 +1099,7 @@ QPushButton#link { border: none; color: #1F3C88; background: transparent; text-d
 #hint { color: #666; }
 #card { background: white; border: 1px solid #E1E4EC; border-radius: 8px; padding: 6px; }
 #cardValue { font-size: 20pt; font-weight: 700; color: #1F3C88; }
+#card QLabel, #plain { background: transparent; }
 QPushButton { background: white; border: 1px solid #C8CDD8; border-radius: 5px;
               padding: 6px 12px; }
 QPushButton:hover { background: #EEF2FB; }

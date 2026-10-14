@@ -26,7 +26,15 @@ Data is saved in `ClassMark Data\classmark.db` next to the exe. Generated report
      - Presets: Full mark sheet, Points only, Levels only, Points & levels, Marks & % only. Your last choices are remembered.
      - Summary rows are worked out from the ticked learners only. The sheet title says e.g. "(10 OF 57 LEARNERS)".
    - **Remarks** are written automatically. To edit, double-click a learner (or **Edit remarks…**). You can change the class teacher's and head teacher's remarks, discipline and class attention, with **Use automatic** to restore the suggestion and Previous/Next to go through the class. Edits save when you move to another learner or click Save & close.
-6. **Settings**: school name, logo, head teacher, learning areas/papers, and **Back up now**. To rename a paper (e.g. Insha → Kiswahili PP2), select it and click **Edit**. Its existing marks are kept. A paper's **code** is its column heading in the marks template. **Order shown** switches between the report's row order and the mark sheet's column order (P.TECH before AGRIC); ▲ ▼ change whichever is shown.
+6. **Dashboard** (for the class and assessment in the top bar). Nothing on it ranks learners.
+   - **Cards:** learners, assessed, class mean, mean level, average points, % of marks entered.
+   - **Ready to print?** Missing marks, closing/opening dates, class teacher and head teacher names, discipline/attention filled in, and how many remarks were personalised.
+   - **Marks entry progress:** entered / total for each paper, and which learners are missing which papers.
+   - **Learners needing support:** in alphabetical order, everyone whose overall level is AE or BE or who dropped a level since the previous assessment, with their two weakest learning areas.
+   - **Level distribution** (whole class and each learning area) and **points summary** (average total points and how many learners are in each points range).
+   - **Change since the previous assessment:** class mean per learning area with ▲/▼, and how many learners moved up, stayed or dropped a level.
+   - **Strongest & weakest learning areas**, **girls & boys** (uses the gender field), a **trend chart** of the class mean across assessments (optionally with one learning area), and the **learning area analysis** table.
+7. **Settings**: school name, logo, head teacher, learning areas/papers, and **Back up now**. To rename a paper (e.g. Insha → Kiswahili PP2), select it and click **Edit**. Its existing marks are kept. A paper's **code** is its column heading in the marks template. **Order shown** switches between the report's row order and the mark sheet's column order (P.TECH before AGRIC); ▲ ▼ change whichever is shown.
 
 ## Grading (CBC 8-level key)
 EE1 90–100 (8) · EE2 75–89 (7) · ME1 58–74 (6) · ME2 41–57 (5) · AE1 31–40 (4) · AE2 21–30 (3) · BE1 11–20 (2) · BE2 0–10 (1).
