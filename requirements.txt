@@ -1,0 +1,5 @@
+PySide6-Essentials
+reportlab
+openpyxl
+pyinstaller
+pillow

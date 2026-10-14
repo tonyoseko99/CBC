@@ -1,0 +1,12 @@
+# Python / build output
+.venv/
+__pycache__/
+*.pyc
+build/
+dist/
+*.log
+
+# School data — never commit (real learners' names, marks, PIN hashes)
+ClassMark Data/
+*.db
+samples/
